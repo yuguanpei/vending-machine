@@ -4,6 +4,9 @@ import useConfig from '@/hooks/useConfig'
 import useCart from '@/hooks/useCart'
 import { toast } from 'sonner'
 const { ipcRenderer } = window.electron
+import useSound from 'use-sound'
+import cashier from '../static/sounds/cashier.mp3'
+import motor from '../static/sounds/motor.mp3'
 
 const useOrder = () => {
   // const [orders, setOrders] = useState([])
@@ -13,6 +16,11 @@ const useOrder = () => {
   const { clearCart } = useCart()
   const [isDispensing, setIsDispensing] = useState(false)
   const [dispenseInfo, setDispenseInfo] = useState(null)
+  const [playCashier] = useSound(cashier)
+  const [playMotor, { stop: stopMotor }] = useSound(motor, {
+    interrupt: true,
+    volume: 0.5
+  })
 
   const getOrders = async () => {
     const orders = await ipcRenderer.invoke('get-orders')
@@ -205,6 +213,7 @@ const useOrder = () => {
       setIsDispensing(true)
     }
     for (let index = 0; index < dispenseSlots.length; index++) {
+      playMotor()
       const dispenseSlot = dispenseSlots[index]
       const layer = dispenseSlot[0]
       const column = dispenseSlot.slice(1)
@@ -245,6 +254,8 @@ const useOrder = () => {
     }, 1000)
     updateOrder({ ...currentOrder, status: 'dispensed', dispenses })
     toast.success('交易完成，请取走您的商品')
+    stopMotor()
+    playCashier()
 
     if (currentOrder.type === 'cart') {
       clearCart()

@@ -6,6 +6,10 @@ import useCountdown from '@/hooks/useCountdown'
 import NumericKeypad from '@/components/Common/NumericKeypad'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
+import useSound from 'use-sound'
+import popDown from '../../static/sounds/pop-down.mp3'
+import error from '../../static/sounds/error.mp3'
+import success from '../../static/sounds/success.mp3'
 
 const AdminAuthModal = ({ isOpen }) => {
   const {
@@ -15,6 +19,9 @@ const AdminAuthModal = ({ isOpen }) => {
     openAdminPanel
   } = useAppStore()
   const [password, setPassword] = useState('')
+  const [playPopDown] = useSound(popDown)
+  const [playError] = useSound(error)
+  const [playSuccess] = useSound(success)
 
   const TIMEOUT_SECONDS = 10
   const { remaining, resetTimer } = useCountdown(
@@ -35,15 +42,23 @@ const AdminAuthModal = ({ isOpen }) => {
 
   const handleVerify = () => {
     if (password === authPassword) {
+      playSuccess()
       openAdminPanel()
     } else {
+      playError()
       setPassword('')
       toast.error('验证失败')
     }
   }
 
+  const handleCloseAdminAuthModal = () => {
+    setPassword('')
+    playPopDown()
+    closeAdminAuthModal()
+  }
+
   return (
-    <Dialog open={isOpen} onOpenChange={closeAdminAuthModal}>
+    <Dialog open={isOpen} onOpenChange={handleCloseAdminAuthModal}>
       <DialogContent
         className="sm:max-w-md"
         onInteractOutside={(e) => {

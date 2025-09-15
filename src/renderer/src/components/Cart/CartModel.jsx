@@ -6,17 +6,40 @@ import useAppStore from '@/stores/appStore'
 import useCart from '@/hooks/useCart'
 import useCountdown from '@/hooks/useCountdown'
 import useOrder from '@/hooks/useOrder'
+import useSound from 'use-sound'
+import popDown from '../../static/sounds/pop-down.mp3'
+import poof from '../../static/sounds/poof.mp3'
+import ding from '../../static/sounds/ding.mp3'
 
 const CartModal = () => {
   const { cart, isCartModalOpen, closeCartModal } = useAppStore()
   const { totalPrice, clearCart } = useCart()
   const { createOrder } = useOrder()
+  const [playPopDown] = useSound(popDown)
+  const [playPoof] = useSound(poof)
+  const [playDing] = useSound(ding)
 
   const TIMEOUT_SECONDS = 60
   const { remaining, resetTimer } = useCountdown(TIMEOUT_SECONDS, closeCartModal, isCartModalOpen)
 
+  const handleCloseCartModal = () => {
+    playPopDown()
+    closeCartModal()
+  }
+
+  const handleClearCart = () => {
+    playPoof()
+    clearCart()
+  }
+
+  const handleCreateOrder = () => {
+    playDing()
+    closeCartModal()
+    createOrder(cart, 'cart')
+  }
+
   return (
-    <Dialog open={isCartModalOpen} onOpenChange={closeCartModal}>
+    <Dialog open={isCartModalOpen} onOpenChange={handleCloseCartModal}>
       <DialogContent
         className="sm:max-w-[625px]"
         onInteractOutside={(e) => {
@@ -45,16 +68,10 @@ const CartModal = () => {
               <span className="text-lg font-semibold">总计: ¥{totalPrice.toFixed(2)}</span>
             </div>
             <div className="flex space-x-2">
-              <Button variant="outline" className="flex-1" onClick={clearCart}>
+              <Button variant="outline" className="flex-1" onClick={handleClearCart}>
                 清空购物车
               </Button>
-              <Button
-                className="flex-1"
-                onClick={() => {
-                  closeCartModal()
-                  createOrder(cart, 'cart')
-                }}
-              >
+              <Button className="flex-1" onClick={handleCreateOrder}>
                 结算
               </Button>
             </div>

@@ -2,15 +2,27 @@ import React, { useState, useCallback, memo } from 'react'
 import { Button } from '@/components/ui/button'
 import useCart from '@/hooks/useCart'
 import { toast } from 'sonner'
+import useSound from 'use-sound'
+import switchOn from '../../static/sounds/switch-on.mp3'
+import switchOff from '../../static/sounds/switch-off.mp3'
 
 const CartItem = ({ product }) => {
   const { addToCart, removeFromCart } = useCart()
 
+  const [playSwitchOn] = useSound(switchOn)
+  const [playSwitchOff] = useSound(switchOff)
+
   const handleAddToCart = (product) => {
+    playSwitchOn()
     const result = addToCart(product)
     if (!result.success) {
       toast.warning(result.message)
     }
+  }
+
+  const handleRemoveFromCart = (product) => {
+    playSwitchOff()
+    removeFromCart(product)
   }
 
   return (
@@ -24,7 +36,7 @@ const CartItem = ({ product }) => {
         <Button
           size="sm"
           variant="outline"
-          onClick={() => removeFromCart(product)}
+          onClick={() => handleRemoveFromCart(product)}
           className="w-8 h-8 p-0"
         >
           -

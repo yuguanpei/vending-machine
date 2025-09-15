@@ -11,6 +11,10 @@ import useCountdown from '@/hooks/useCountdown'
 import NumericKeypad from '@/components/Common/NumericKeypad'
 import { toast } from 'sonner'
 import { Cog, Package, MapPin, ListOrdered } from 'lucide-react'
+import useSound from 'use-sound'
+import popDown from '../../static/sounds/pop-down.mp3'
+import error from '../../static/sounds/error.mp3'
+import success from '../../static/sounds/success.mp3'
 
 const PaymentModal = () => {
   const { vid, base, isPaymentModalOpen, closePaymentModal, currentOrder } = useAppStore()
@@ -18,6 +22,9 @@ const PaymentModal = () => {
   const { updateOrder, verifyTotpCode, isDispensing, dispenseInfo } = useOrder()
   const [totpCode, setTotpCode] = useState('')
   const [qrCode, setQrCode] = useState('')
+  const [playPopDown] = useSound(popDown)
+  const [playError] = useSound(error)
+  const [playSuccess] = useSound(success)
 
   const TIMEOUT_SECONDS = 3 * 60
   const onPaymentModalTimeout = () => {
@@ -50,9 +57,11 @@ const PaymentModal = () => {
   const handleVerification = async () => {
     const result = await verifyTotpCode(totpCode)
     if (result.success) {
+      playSuccess()
       toast.success('验证成功，出货中...')
       closePaymentModal()
     } else {
+      playError()
       setTotpCode('')
       toast.error(result.message)
     }
@@ -101,7 +110,13 @@ const PaymentModal = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      <Dialog open={isPaymentModalOpen} onOpenChange={() => handleClosePaymentModal('cancel')}>
+      <Dialog
+        open={isPaymentModalOpen}
+        onOpenChange={() => {
+          handleClosePaymentModal('cancel')
+          playPopDown()
+        }}
+      >
         <DialogContent
           className="sm:max-w-[625px]"
           onInteractOutside={(e) => {

@@ -6,12 +6,20 @@ import useConfig from '@/hooks/useConfig'
 import useOrder from '@/hooks/useOrder'
 import useCountdown from '@/hooks/useCountdown'
 import { toast } from 'sonner'
+import useSound from 'use-sound'
+import popDown from '../../static/sounds/pop-down.mp3'
+import levelUp from '../../static/sounds/level-up.mp3'
+import ding from '../../static/sounds/ding.mp3'
 
 const ProductModal = () => {
   const { currentProduct, isProductModalOpen, closeProductModal } = useAppStore()
   const { addToCart } = useCart()
   const { createOrder } = useOrder()
   const { getProductStock } = useConfig()
+
+  const [playPopDown] = useSound(popDown)
+  const [playLevelUp] = useSound(levelUp)
+  const [playDing] = useSound(ding)
 
   const TIMEOUT_SECONDS = 60
   const { remaining, resetTimer } = useCountdown(
@@ -25,6 +33,7 @@ const ProductModal = () => {
   currentProduct.stock = getProductStock(currentProduct.id)
 
   const handleAddToCart = () => {
+    playLevelUp()
     const result = addToCart(currentProduct)
     if (!result.success) {
       toast.warning(result.message)
@@ -34,12 +43,18 @@ const ProductModal = () => {
   }
 
   const handleBuyNow = () => {
+    playDing()
     closeProductModal()
     createOrder([{ ...currentProduct, quantity: 1 }], 'product')
   }
 
+  const handleCloseProductModal = () => {
+    playPopDown()
+    closeProductModal()
+  }
+
   return (
-    <Dialog open={isProductModalOpen} onOpenChange={closeProductModal}>
+    <Dialog open={isProductModalOpen} onOpenChange={handleCloseProductModal}>
       <DialogContent
         className="sm:max-w-[625px]"
         onInteractOutside={(e) => {

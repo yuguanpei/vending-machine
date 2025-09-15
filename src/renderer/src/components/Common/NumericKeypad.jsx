@@ -2,23 +2,23 @@ import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Delete, CheckCircle } from 'lucide-react'
+import useSound from 'use-sound'
+import keyboard from '../../static/sounds/keyboard.mp3'
 
 const NumericKeypad = ({ onInput, onDelete, onConfirm }) => {
+  const [playKeyboard] = useSound(keyboard)
+
   const handleButtonClick = (value) => {
+    playKeyboard()
     if (onInput) {
       onInput(value)
     }
   }
 
   const handleDeleteClick = () => {
+    playKeyboard()
     if (onDelete) {
       onDelete()
-    }
-  }
-
-  const handleConfirmClick = () => {
-    if (onConfirm) {
-      onConfirm()
     }
   }
 

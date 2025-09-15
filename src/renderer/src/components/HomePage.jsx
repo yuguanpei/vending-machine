@@ -13,6 +13,8 @@ import { InfoIcon } from 'lucide-react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import PaymentModal from '@/components/Common/PaymentModal'
 import useCart from '@/hooks/useCart'
+import useSound from 'use-sound'
+import popUp from '../static/sounds/pop-up.mp3'
 
 const HomePage = () => {
   const {
@@ -32,6 +34,7 @@ const HomePage = () => {
   const [currentAdIndex, setCurrentAdIndex] = useState(0)
   const [clickCount, setClickCount] = useState(0)
   const [lastClickTime, setLastClickTime] = useState(0)
+  const [playPopUp] = useSound(popUp)
 
   useEffect(() => {
     if (ads.length === 0) return
@@ -61,8 +64,24 @@ const HomePage = () => {
     }
   }, [ads, currentAdIndex])
 
+  const handleOpenProductModal = (product) => {
+    playPopUp()
+    openProductModal(product)
+  }
+
+  const handleOpenCartModal = () => {
+    playPopUp()
+    openCartModal()
+  }
+
+  const handleOpenOrderQueryModal = () => {
+    playPopUp()
+    openOrderQueryModal()
+  }
+
   const handleCopyrightClick = () => {
     if (!authPassword) {
+      playPopUp()
       openAdminPanel()
       return
     }
@@ -83,6 +102,7 @@ const HomePage = () => {
 
     // 如果达到7次点击，打开modal并重置计数
     if (newCount >= 7) {
+      playPopUp()
       openAdminAuthModal()
       setClickCount(0)
     }
@@ -159,7 +179,7 @@ const HomePage = () => {
                 <Card
                   key={product.id}
                   className="h-[300px] w-[215px] mb-6 p-0"
-                  onClick={() => openProductModal(product)}
+                  onClick={() => handleOpenProductModal(product)}
                 >
                   <CardContent className="p-3 flex flex-col justify-between">
                     <img src={product.src} alt={product.name} className="h-[85%] object-cover " />
@@ -201,7 +221,7 @@ const HomePage = () => {
           variant="ghost"
           size="sm"
           className="text-xs h-auto p-1 ml-2"
-          onClick={openOrderQueryModal}
+          onClick={handleOpenOrderQueryModal}
         >
           订单查询
         </Button>
@@ -215,7 +235,11 @@ const HomePage = () => {
           {/* 右下区域 */}
           <div className="bottom-4 fixed right-4 z-40">
             {/* 购物车入口 */}
-            <Button onClick={openCartModal} size="lg" className="h-14 w-14 rounded-full relative">
+            <Button
+              onClick={handleOpenCartModal}
+              size="lg"
+              className="h-14 w-14 rounded-full relative"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-[24px!important] w-[24px!important]"

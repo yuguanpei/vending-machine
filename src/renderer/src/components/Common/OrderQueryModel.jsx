@@ -11,6 +11,11 @@ import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { Package } from 'lucide-react'
 import useOrder from '@/hooks/useOrder'
+import useSound from 'use-sound'
+import popDown from '../../static/sounds/pop-down.mp3'
+import error from '../../static/sounds/error.mp3'
+import success from '../../static/sounds/success.mp3'
+import ding from '../../static/sounds/ding.mp3'
 
 const OrderQueryModel = () => {
   const {
@@ -22,6 +27,10 @@ const OrderQueryModel = () => {
   } = useAppStore()
   const { getOrders } = useOrder()
   const [numericKeyword, setNumericKeyword] = useState('')
+  const [playPopDown] = useSound(popDown)
+  const [playError] = useSound(error)
+  const [playSuccess] = useSound(success)
+  const [playDing] = useSound(ding)
 
   useEffect(() => {
     if (isOrderQueryModalOpen) {
@@ -55,19 +64,23 @@ const OrderQueryModel = () => {
     const orders = await getOrders()
     const order = orders.find((order) => order.id.endsWith(numericKeyword))
     if (!order) {
+      playError()
       setNumericKeyword('')
       toast.error('订单不存在,请输入当日生成的订单号后六位')
     } else {
+      playSuccess()
       setCurrentOrder(order)
     }
   }
 
   const handleBackToQuery = () => {
+    playPopDown()
     setNumericKeyword('')
     setCurrentOrder(null)
   }
 
   const handleRestorOrder = () => {
+    playDing()
     handlecloseOrderQueryModal()
     openPaymentModal(currentOrder)
   }
@@ -94,7 +107,13 @@ const OrderQueryModel = () => {
   }
 
   return (
-    <Dialog open={isOrderQueryModalOpen} onOpenChange={handlecloseOrderQueryModal}>
+    <Dialog
+      open={isOrderQueryModalOpen}
+      onOpenChange={() => {
+        handlecloseOrderQueryModal()
+        playPopDown()
+      }}
+    >
       <DialogContent
         className="sm:max-w-md md:max-w-lg"
         onInteractOutside={(e) => {
