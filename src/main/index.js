@@ -37,13 +37,16 @@ function createWindow() {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      webSecurity: false // 禁用webSecurity以允许file://协议
     }
   })
 
   if (!is.dev) {
     // 完全移除菜单（更彻底）
     mainWindow.setMenu(null)
+    // 关闭开发者工具
+    mainWindow.webContents.closeDevTools()
   }
 
   mainWindow.on('ready-to-show', () => {
@@ -237,12 +240,10 @@ app.whenReady().then(() => {
     }
   })
 
-  ipcMain.handle('get-file', (event, filename) => {
+  ipcMain.handle('get-file-path', async (event, filename) => {
     const staticPath = path.normalize(path.join(vmDataPath, 'static'))
     const filePath = path.normalize(path.join(staticPath, filename))
-    if (fs.existsSync(filePath)) {
-      return fs.readFileSync(filePath)
-    }
+    return fs.existsSync(filePath) ? filePath : null
   })
 
   ipcMain.handle('update-slot', async (event, layer, column, data) => {

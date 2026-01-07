@@ -2,27 +2,13 @@ import { useEffect, useState } from 'react'
 import useAppStore from '@/stores/appStore'
 const { ipcRenderer } = window.electron
 
-// 将文件转换为DataURL
-const fileToDataURL = async (filename) => {
-  if (!filename) return ''
-  try {
-    const buffer = await ipcRenderer.invoke('get-file', filename)
-    if (!buffer) return ''
-    const blob = new Blob([buffer])
-    return URL.createObjectURL(blob)
-  } catch (err) {
-    console.error('文件读取错误:', err.message)
-    return ''
-  }
-}
-
 // 处理广告数据
 const processAdsData = async (ads) => {
   if (!ads || !Array.isArray(ads)) return []
   const processedAds = await Promise.all(
     ads.map(async (ad) => {
       try {
-        ad.src = await fileToDataURL(ad.filename)
+        ad.src = await ipcRenderer.invoke('get-file-path', ad.filename)
         return ad
       } catch (err) {
         console.error('处理广告数据错误:', err.message)
@@ -39,7 +25,7 @@ const processProductsData = async (products) => {
   const processedProducts = await Promise.all(
     products.map(async (product) => {
       try {
-        product.src = await fileToDataURL(product.filename)
+        product.src = await ipcRenderer.invoke('get-file-path', product.filename)
         return product
       } catch (err) {
         console.error('处理商品数据错误:', err.message)
