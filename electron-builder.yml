@@ -1,5 +1,5 @@
 appId: com.codeasier.vm
-productName: vending-machine
+productName: Vending Machine
 directories:
   buildResources: build
 files:
@@ -7,17 +7,30 @@ files:
   - '!src/*'
   - '!electron.vite.config.{js,ts,mjs,cjs}'
   - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
-  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
+  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml,*.lock}'
+  - '!**/*.map'
+  - '!**/*.log'
 asarUnpack:
   - resources/**
+  - resources/**/*.exe
+  - resources/**/*.dll
+  - resources/**/*.ini
 win:
-  executableName: vending-machine
+  executableName: Vending Machine
+  icon: resources/icon.ico
+  target:
+    # - nsis
+    - portable
 nsis:
-  artifactName: ${name}-${version}-setup.${ext}
+  artifactName: ${productName}-${version}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
+  createStartMenuShortcut: true
+  oneClick: false
+  allowToChangeInstallationDirectory: true
 mac:
+  executableName: Vending Machine
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.
@@ -25,18 +38,29 @@ mac:
     - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
     - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
   notarize: false
+  darkModeSupport: true
 dmg:
-  artifactName: ${name}-${version}.${ext}
+  artifactName: ${productName}-${version}.${ext}
+  contents:
+    - x: 448
+      y: 340
+      type: link
+      path: /Applications
+    - x: 192
+      y: 340
+      type: file
 linux:
   target:
     - AppImage
-    - snap
     - deb
-  maintainer: electronjs.org
+  maintainer: Vending Machine <yuguanpei@hotmail.com>
   category: Utility
+  desktop:
+    Name: Vending Machine
+    Comment: Smart Vending Machine Application
 appImage:
-  artifactName: ${name}-${version}.${ext}
-npmRebuild: false
+  artifactName: ${productName}-${version}.${ext}
+npmRebuild: true
 publish:
   provider: generic
-  url: https://example.com/auto-updates
+  url: https://www.codeasier.com/web/
