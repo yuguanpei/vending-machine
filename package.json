@@ -1,7 +1,7 @@
 {
   "name": "vending-machine",
   "version": "1.1.0",
-  "description": "A single-machine, offline software application for simulating vending machine operations.",
+  "description": "Vending Machine",
   "main": "./out/main/index.js",
   "author": "yuguanpei@hotmail.com",
   "homepage": "https://github.com/yuguanpei",
