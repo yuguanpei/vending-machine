@@ -9,12 +9,16 @@ const useAppStore = create((set, get) => ({
   ads: [],
   base: 'https://www.codeasier.com/vm/pay',
   setConfig: (data) => {
-    if (data?.vid) set({ vid: data.vid })
-    if (data?.password) set({ password: data.password })
-    if (data?.secret) set({ secret: data.secret })
-    if (data?.base) set({ base: data.base })
-    if (data?.products) set({ products: data.products })
-    if (data?.ads) set({ ads: data.ads })
+    const cfg = {}
+    if (data?.vid) cfg.vid = data.vid
+    if (data?.password) cfg.password = data.password
+    if (data?.secret) cfg.secret = data.secret
+    if (data?.base) cfg.base = data.base
+    if (data?.products) cfg.products = data.products
+    if (data?.ads) cfg.ads = data.ads
+    if (Object.keys(cfg).length > 0) {
+      set(cfg)
+    }
   },
   // 货道配置
   slots: {},

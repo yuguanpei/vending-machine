@@ -68,8 +68,11 @@ const useConfig = () => {
   useEffect(() => {
     const loadConfig = async () => {
       setLoading(true)
-      getFullscreenStatus()
-      const [slots, config] = await Promise.all([getSlots(), getConfig()])
+      const [isFullscreen, slots, config] = await Promise.all([
+        getFullscreenStatus(),
+        getSlots(),
+        getConfig()
+      ])
       setSlots(slots)
       setConfig(config)
       setLoading(false)
