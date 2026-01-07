@@ -1,12 +1,14 @@
 import useAppStore from '@/stores/appStore'
+import useConfig from '@/hooks/useConfig'
 
 const useCart = () => {
   const { cart, setCart } = useAppStore()
+  const { getProductStock } = useConfig()
 
   const addToCart = (product) => {
     const existingItem = cart.find((item) => item.id === product.id)
     if (existingItem) {
-      if (existingItem.quantity >= product.stock) {
+      if (existingItem.quantity >= getProductStock(product.id)) {
         return { success: false, message: '库存不足' }
       }
       setCart(
