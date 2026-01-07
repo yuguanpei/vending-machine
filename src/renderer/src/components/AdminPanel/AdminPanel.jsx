@@ -130,15 +130,15 @@ const AdminPanel = () => {
       </div>
 
       {/* 底部区域 */}
-      {/* 版权信息 */}
-      <div className="absolute bottom-2 left-2 flex items-center gap-2">
+      <div className="bottom-2 flex justify-between">
+        {/* 版权信息 */}
         <Button variant="ghost" size="sm" className="text-xs text-muted-foreground h-auto p-1">
           © {new Date().getFullYear()} Vending Machine v1.0
         </Button>
-      </div>
-      {/* 系统时间 */}
-      <div className="absolute bottom-2 right-2 flex items-center gap-2">
-        <span className="text-xs font-bold text-primary h-auto p-1">{vid}@{formatDateTime(now)}</span>
+        {/* 系统时间 */}
+        <span className="text-xs font-bold text-primary h-auto p-1">
+          {vid}@{formatDateTime(now)}
+        </span>
       </div>
     </div>
   )
