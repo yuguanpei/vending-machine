@@ -31,7 +31,7 @@ const useCountdown = (isActive, timeoutSeconds, onTimeout, onCountdown) => {
       }
 
       onCountdown && onCountdown(remaining)
-    }, 500)
+    }, 1000)
 
     return () => {
       clearInterval(intervalRef.current)

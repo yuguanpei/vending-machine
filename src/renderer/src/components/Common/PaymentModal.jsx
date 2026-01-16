@@ -37,7 +37,7 @@ const PaymentModal = () => {
 
   const [remaining, setRemaining] = useState(null)
   const onPaymentModalCountdown = (t) => {
-    setRemaining(t)
+    if (t != remaining) setRemaining(t)
   }
 
   const resetTimer = useCountdown(
