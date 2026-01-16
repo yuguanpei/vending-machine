@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -44,10 +44,10 @@ const OrderQueryModel = () => {
   }
 
   const TIMEOUT_SECONDS = 30
-  const { remaining, resetTimer } = useCountdown(
+  const resetTimer = useCountdown(
+    isOrderQueryModalOpen,
     TIMEOUT_SECONDS,
-    handlecloseOrderQueryModal,
-    isOrderQueryModalOpen
+    handlecloseOrderQueryModal
   )
 
   const handleInput = (value) => {

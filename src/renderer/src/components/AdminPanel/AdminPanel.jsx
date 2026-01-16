@@ -29,7 +29,7 @@ const AdminPanel = () => {
   const [now, setNow] = useState(new Date())
 
   const TIMEOUT_SECONDS = 60
-  const { remaining, resetTimer } = useCountdown(TIMEOUT_SECONDS, closeAdminPanel, isAdminPanelOpen)
+  const resetTimer = useCountdown(isAdminPanelOpen, TIMEOUT_SECONDS, closeAdminPanel)
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000)

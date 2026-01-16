@@ -27,16 +27,24 @@ const PaymentModal = () => {
   const [playSuccess] = useSound(success)
 
   const TIMEOUT_SECONDS = 3 * 60
+
   const onPaymentModalTimeout = () => {
     handleClosePaymentModal('timeout')
     if (currentOrder.type === 'cart') {
       clearCart()
     }
   }
-  const { remaining, resetTimer } = useCountdown(
+
+  const [remaining, setRemaining] = useState(null)
+  const onPaymentModalCountdown = (t) => {
+    setRemaining(t)
+  }
+
+  const resetTimer = useCountdown(
+    isPaymentModalOpen,
     TIMEOUT_SECONDS,
     onPaymentModalTimeout,
-    isPaymentModalOpen
+    onPaymentModalCountdown
   )
 
   useEffect(() => {

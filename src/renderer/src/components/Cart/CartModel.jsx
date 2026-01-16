@@ -20,7 +20,7 @@ const CartModal = () => {
   const [playDing] = useSound(ding)
 
   const TIMEOUT_SECONDS = 60
-  const { remaining, resetTimer } = useCountdown(TIMEOUT_SECONDS, closeCartModal, isCartModalOpen)
+  const resetTimer = useCountdown(isCartModalOpen, TIMEOUT_SECONDS, closeCartModal)
 
   const handleCloseCartModal = () => {
     playPopDown()

@@ -24,11 +24,7 @@ const AdminAuthModal = ({ isOpen }) => {
   const [playSuccess] = useSound(success)
 
   const TIMEOUT_SECONDS = 10
-  const { remaining, resetTimer } = useCountdown(
-    TIMEOUT_SECONDS,
-    closeAdminAuthModal,
-    isAdminAuthModalOpen
-  )
+  const resetTimer = useCountdown(isAdminAuthModalOpen, TIMEOUT_SECONDS, closeAdminAuthModal)
 
   const handleInput = (value) => {
     if (password.length < 6) {

@@ -22,11 +22,7 @@ const ProductModal = () => {
   const [playDing] = useSound(ding)
 
   const TIMEOUT_SECONDS = 60
-  const { remaining, resetTimer } = useCountdown(
-    TIMEOUT_SECONDS,
-    closeProductModal,
-    isProductModalOpen
-  )
+  const resetTimer = useCountdown(isProductModalOpen, TIMEOUT_SECONDS, closeProductModal)
 
   if (!currentProduct) return null
 
