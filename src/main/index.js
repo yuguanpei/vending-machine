@@ -42,7 +42,10 @@ function createWindow() {
     }
   })
 
-  if (!is.dev) {
+  if (is.dev) {
+    // 打开开发者工具
+    mainWindow.webContents.openDevTools({ mode: 'right' })
+  } else {
     // 完全移除菜单（更彻底）
     mainWindow.setMenu(null)
     // 关闭开发者工具

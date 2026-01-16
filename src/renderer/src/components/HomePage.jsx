@@ -205,7 +205,7 @@ const HomePage = () => {
       </div>
 
       {/* 左下区域 */}
-      <div className="bottom-2 fixed left-2 z-40">
+      <div className="bottom-2 fixed flex px-4 w-full z-40">
         {/* 版权信息 */}
         <Button
           variant="ghost"

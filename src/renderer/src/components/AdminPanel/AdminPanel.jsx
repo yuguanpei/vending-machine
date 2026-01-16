@@ -36,14 +36,6 @@ const AdminPanel = () => {
     return () => clearInterval(id)
   }, [])
 
-  const formatDateTime = (d) => {
-    const pad = (n) => String(n).padStart(2, '0')
-    return (
-      `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ` +
-      `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
-    )
-  }
-
   const handleImportConfig = async () => {
     const { success, message } = await importConfig()
     toast[success ? 'success' : 'error'](message)
@@ -130,14 +122,14 @@ const AdminPanel = () => {
       </div>
 
       {/* 底部区域 */}
-      <div className="bottom-2 flex justify-between">
+      <div className="fixed bottom-2 w-full flex justify-between px-4">
         {/* 版权信息 */}
         <Button variant="ghost" size="sm" className="text-xs text-muted-foreground h-auto p-1">
           © {new Date().getFullYear()} Vending Machine v1.0
         </Button>
         {/* 系统时间 */}
         <span className="text-xs font-bold text-primary h-auto p-1">
-          {vid}@{formatDateTime(now)}
+          {vid}@{now.toLocaleString()}
         </span>
       </div>
     </div>
